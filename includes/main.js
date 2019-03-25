@@ -23,8 +23,11 @@ function initiateApp(){
 	/*advanced: add jquery sortable call here to make the gallery able to be sorted
 		//on change, rebuild the images array into the new order
 	*/
+
 	makeGallery(pictures);
 	addModalCloseHandler();
+
+	$( "#gallery" ).sortable();
 }
 function makeGallery(imageArray){
 	//use loops and jquery dom creation to make the html structure inside the #gallery section
@@ -36,11 +39,26 @@ function makeGallery(imageArray){
 
 		//append the element to the #gallery section
 
+	for (var i = 0; i < imageArray.length; i++) {
+		var imageLink = imageArray[i].replace('images/', '');
+		var figure = $("<figure>")
+			.addClass('imageGallery col-xs-12 col-sm-6 col-md-4')
+			.css('background-image', 'url('+imageArray[i]+')')
+			.click( displayImage );
+		var figCaption = $("<figcaption>")
+			.text(imageLink);
+		figure.append(figCaption);
+		$("#gallery").append( figure );
+	}
+
 }
 
-function addModalCloseHandler(){
+function addModalCloseHandler(modalImg){
 	//add a click handler to the img element in the image modal.  When the element is clicked, close the modal
 	//for more info, check here: https://www.w3schools.com/bootstrap/bootstrap_ref_js_modal.asp	
+	$(modalImg).click(function(){
+		$('#galleryModal').modal('hide')
+	})
 }
 
 function displayImage(){
@@ -56,9 +74,19 @@ function displayImage(){
 
 	//show the modal with JS.  Check for more info here: 
 	//https://www.w3schools.com/bootstrap/bootstrap_ref_js_modal.asp
+
+	var imageLinkUrl = $(this).css("background-image");
+
+	var newImageLinkUrl = imageLinkUrl.split("images/")[1].slice(0,-2);
+	//.replace("\")", "");
+	//$(this) => the reason why we use a jquery selector is because when you are using it with css jquery method it will not work with the core javascript
+
+	var modalImg = $(".modal img");
+
+	$(".modal-title").text(newImageLinkUrl);
+	modalImg.attr("src", "images/" + newImageLinkUrl);
+
+	addModalCloseHandler(modalImg)
+
+	$('#galleryModal').modal()
 }
-
-
-
-
-

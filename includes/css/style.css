@@ -1,1 +1,4 @@
-style.css
+.imageGallery:hover{
+    border: 3px solid red;
+    background-image: none !important;
+}
